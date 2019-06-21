@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os, sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,7 +27,7 @@ SECRET_KEY = '&$h^avul7y*i7moi^gks!sb1s8v(_&p)u5kn)*ud*4n_r8vc@g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.meiduo.site']   # 允许哪个域名来访问，美多默认通过127.0.0.1:8000
+ALLOWED_HOSTS = ['*']  # 允许哪个域名来访问，美多默认通过127.0.0.1:8000
 
 # Application definition
 
@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+
+    # 注册cors应用
+    'corsheaders',
     # 注册Haystack
     'haystack',
+
     # 注册user子应用
     # 'users.apps.UsersConfig',
     'users.apps.UsersConfig',
@@ -56,10 +62,10 @@ INSTALLED_APPS = [
     # 注册payment子应用
     'payment.apps.PaymentConfig',
 
-
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # 注册cors中间件
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -274,7 +280,7 @@ QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
 QQ_REDIRECT_URI = 'http://www.meiduo.site:8000/oauth_callback'
 
 # 发邮件的配置
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   # 指定邮件后端
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # 指定邮件后端
 EMAIL_HOST = 'smtp.163.com'  # 发邮件主机
 EMAIL_PORT = 25  # 发邮件端口
 EMAIL_HOST_USER = 'itcast99@163.com'  # 授权的邮箱
@@ -284,20 +290,17 @@ EMAIL_FROM = '美多商城<itcast99@163.com>'  # 发件人抬头
 # 邮箱验证链接
 EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
 
-
 # 修改django文件存储类
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.fdfs_storage.FastDFSStorage'
-
 
 # Haystack
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://192.168.137.141:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
-        'INDEX_NAME': 'meiduo_mall', # Elasticsearch建立的索引库的名称
+        'URL': 'http://192.168.137.141:9200/',  # Elasticsearch服务器ip地址，端口号固定为9200
+        'INDEX_NAME': 'meiduo_mall',  # Elasticsearch建立的索引库的名称
     },
 }
-
 
 # 当添加、修改、删除数据时，自动生成索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
@@ -311,8 +314,33 @@ ALIPAY_DEBUG = True  # 表示是沙箱环境还是真实支付环境
 ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
 
-
 # 微博登录
 APP_KEY = '3305669385'
 APP_SECRET = '74c7bea69d5fc64f5c3b80c802325276'
 CALLBACK_URL = 'http://www.meiduo.site:8000/sina_callback'
+
+# 设置白名单
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
+    'http://www.meiduo.site:8080',
+    'http://api.meiduo.site:8000',
+    'http://127.0.0.1:8000'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+
+# 配置rest_framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_RESPONSE_PAYLOAD_HANDLER':"meiduo_mall.apps.admin_backend.jwt_response_handeler.jwt_response.custom_jwt_response_handler"
+}
