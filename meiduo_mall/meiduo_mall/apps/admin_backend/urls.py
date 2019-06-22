@@ -1,8 +1,10 @@
 from django.conf.urls import url
 from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import obtain_jwt_token
-from admin_backend.views.users import *
+
+from admin_backend.sku import *
 from admin_backend.views.home import *
+from admin_backend.views.users import *
 
 urlpatterns = [
 
@@ -15,9 +17,21 @@ urlpatterns = [
     # # 原始方法
     # url(r'^meiduo_admin/statistical/total_count/$', HomeView.as_view())
 
-    url(r"^meiduo_admin/users/$",UserView.as_view())
-]
+    # 管理员用户新增和展示
+    url(r"^meiduo_admin/users/$", UserView.as_view()),
 
+    # SKU管理展示
+    url(r"^meiduo_admin/skus/$", SkusModelView.as_view({"get": "list", "post": "create"})),
+
+    # 展示商品分类
+    url(r"^meiduo_admin/skus/categories/$", SkusCategoryView.as_view()),
+
+    # SPU商品名称
+    url(r"^meiduo_admin/goods/simple/$", SpuView.as_view()),
+
+    # SPU商品规格名称
+    url(r"^meiduo_admin/goods/(?P<pk>\d+)/specs/$", SkusSpecsView.as_view()),
+]
 
 # ----------------------------------------------------------------------------------------------
 # WARNING basehttp 124 "GET /meiduo_admin/statistical/total_count/ HTTP/1.1" 404 9871
