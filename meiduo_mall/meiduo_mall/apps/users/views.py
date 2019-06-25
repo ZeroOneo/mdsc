@@ -113,7 +113,7 @@ class LoginView(View):
     def post(self, request):
 
         username_c = request.POST.get("username")
-        password_c = request.POST.get("password")
+        password_c = request.POST.get("pwd")
         remember_c = request.POST.get("remembered")
 
         #   ----- 多账号登录法一 : 修改内部源码匹配变量------
@@ -123,7 +123,7 @@ class LoginView(View):
         #     User.USERNAME_FIELD = "mobile"
 
         # 判断user是否存在  不存在返回 none
-        user = authenticate(username=username_c, password=password_c)
+        user = authenticate(request, username=username_c, password=password_c)
         # 将mobile 改回 username
         # User.USERNAME_FIELD = "username"
 

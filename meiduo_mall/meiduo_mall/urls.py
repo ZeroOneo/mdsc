@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -39,4 +41,9 @@ urlpatterns = [
     # 支付模块
     url(r'^', include('payment.urls', namespace='payment')),
 
+
+    # 后台登陆
+    url(r'^meiduo_admin/', include('admin_backend.urls')),
+
+    # url(r'^docs/', include_docs_urls(title='API')),
 ]

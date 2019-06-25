@@ -31,11 +31,23 @@ class UsernameMobileAuthBackend(ModelBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         # 根据传入的username 判断出是手机号还是用户名
-        user = get_user_by_account(username)
-        # 检查user是否存在以及所对应密码   user不存在返回none 调换位置会报错
-        if user and user.check_password(password):
-            return user
 
+        user = get_user_by_account(username)
+
+        if user is None:
+            return None
+
+        #  option请求为空 判断是否是有超级权限
+        if request == None:
+            print("superuser 判断")
+            if user.is_staff == 0:
+                return None
+
+        # 检查user密码
+        if user.check_password(password):
+            print("登录成功")
+            return user
+        print("判断失败了")
 
 def email_active_url(user):
     """生成激活邮件连接并加密"""
@@ -68,6 +80,3 @@ def email_check_url(token):
         except User.DoesNotExist:
             return None
         return user
-
-
-
