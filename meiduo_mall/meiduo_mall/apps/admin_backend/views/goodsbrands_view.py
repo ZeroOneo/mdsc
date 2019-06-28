@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from admin_backend.page_tool import Page_tool
 from goods.models import Brand
 
-from admin_backend.serializers.goodsBrandsSerializers import GoodsBrandsSerializers
+from admin_backend.serializers.goodsBrandsserializers import GoodsBrandsSerializers
 
 
 class GoodBrandsModelViewSet(ModelViewSet):

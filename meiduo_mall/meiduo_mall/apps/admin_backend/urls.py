@@ -2,14 +2,19 @@ from django.conf.urls import url
 from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
-from admin_backend.views.channel_view import GoodsChannelsView
+from admin_backend.views.admins_view import *
+from admin_backend.views.channel_view import *
 from admin_backend.views.sku_view import *
 from admin_backend.views.home_view import *
+from admin_backend.views.skus_iamge_view import *
 from admin_backend.views.specs_options_view import *
-from admin_backend.views.specs_view import SpecsModelViewSet
+from admin_backend.views.specs_view import *
 from admin_backend.views.spu_view import *
 from admin_backend.views.users_view import *
-from admin_backend.views.goodsBrands_view import GoodBrandsModelViewSet
+from admin_backend.views.goodsbrands_view import *
+from admin_backend.views.orders_view import *
+from admin_backend.views.permission_view import *
+from admin_backend.views.groups_view import *
 
 urlpatterns = [
 
@@ -88,8 +93,56 @@ urlpatterns = [
     # 商品頻道管理--展示一級分類
     url(r"^goods/categories/$", GoodsChannelsView.as_view({"get": "categories"})),
 
-    # 商品品牌管理--展示所有信息
-    url(r"^goods/brands/$", GoodBrandsModelViewSet.as_view({"get": "list"})),
+    # 商品品牌管理--展示所有信息--创建
+    url(r"^goods/brands/$", GoodBrandsModelViewSet.as_view({"get": "list", "post": "create"})),
+
+    # 商品品牌管理--修改--展示--删除--单一信息
+    url(r"^goods/brands/(?P<pk>\d+)/$",
+        GoodBrandsModelViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})),
+
+    # 商品图片管理--展示所有信息
+    url(r"^skus/images/$", SKUSImageModelView.as_view({"get": "list", "post": "create"})),
+
+    # 商品图片管理--修改单条信息
+    url(r"^skus/images/(?P<pk>\d+)/$",
+        SKUSImageModelView.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})),
+
+    # 商品图片管理--新增信息
+    url(r"^skus/simple/$", SKUSImageModelView.as_view({"get": "simple"})),
+
+    # 商品订单管理--展示信息
+    url(r"^orders/$", OrdersModelViewSet.as_view({"get": "list"})),
+
+    # 商品订单管理--展示详情信息
+    url(r"^orders/(?P<pk>\d+)/$", OrdersModelViewSet.as_view({"get": "retrieve"})),
+
+    # 商品图片管理--更改订单状态信息
+    url(r"^orders/(?P<pk>\d+)/status/$", OrdersModelViewSet.as_view({"patch": "partial_update"})),
+
+    # 权限管理--展示--所有权限列表--创建新权限
+    url(r"^permission/perms/$", PermissionModelViewSet.as_view({"get": "list", "post": "create"})),
+
+    # 权限管理--更新--删除权限列表
+    url(r"^permission/perms/(?P<pk>\d+)/$", PermissionModelViewSet.as_view({"put": "update", "delete": "destroy"})),
+
+    # 权限管理--展示权限类型列表
+    url(r"^permission/content_types/$", PermissionModelViewSet.as_view({"get": "content_types"})),
+
+    # 用户组管理--展示所有组信息
+    url(r"^permission/groups/$", GroupsModelViewSet.as_view({"get": "list", "post": "create"})),
+
+    # 用户组管理--展示组信息
+    url(r"^permission/simple/$", GroupsModelViewSet.as_view({"get": "simple"})),
+
+    # 用户组管理--展示组信息
+    url(r"^permission/admins/$", AdminModelViewSet.as_view({"get": "list", "post": "create"})),
+
+    # 用户组管理--展示组信息
+    url(r"^permission/admins/(?P<pk>\d+)/$",
+        AdminModelViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})),
+
+    # 用户组管理--展示组信息
+    url(r"^permission/groups/simple/$", AdminModelViewSet.as_view({"get": "simple"})),
 
 ]
 

@@ -27,7 +27,7 @@ SECRET_KEY = '&$h^avul7y*i7moi^gks!sb1s8v(_&p)u5kn)*ud*4n_r8vc@g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # 允许哪个域名来访问，美多默认通过127.0.0.1:8000
+ALLOWED_HOSTS = ['*',"www.nb.com"]  # 允许哪个域名来访问，美多默认通过127.0.0.1:8000
 
 # Application definition
 
@@ -39,13 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
-
     # 注册cors应用
     'corsheaders',
     # 注册Haystack
     'haystack',
-
 
     # 注册user子应用
     # 'users.apps.UsersConfig',
@@ -298,8 +295,8 @@ DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.fdfs_storage.FastDFSStorage'
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://192.168.137.141:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
-        'INDEX_NAME': 'meiduo_mall', # Elasticsearch建立的索引库的名称
+        'URL': 'http://192.168.137.141:9200/',  # Elasticsearch服务器ip地址，端口号固定为9200
+        'INDEX_NAME': 'meiduo_mall',  # Elasticsearch建立的索引库的名称
     },
 }
 
@@ -326,10 +323,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
     'http://www.meiduo.site:8080',
     'http://api.meiduo.site:8000',
-    'http://127.0.0.1:8000'
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1',
 )
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
-
 
 # 配置rest_framework
 
@@ -343,5 +340,7 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
-    'JWT_RESPONSE_PAYLOAD_HANDLER':"meiduo_mall.apps.admin_backend.jwt_response_handeler.jwt_response.custom_jwt_response_handler"
+    'JWT_RESPONSE_PAYLOAD_HANDLER': "meiduo_mall.apps.admin_backend.jwt_response_handeler.jwt_response.custom_jwt_response_handler"
 }
+
+FAST_CONFIG_PATH = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
